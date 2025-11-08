@@ -9,9 +9,9 @@ import re
 _TS_VALUE_REGEX = re.compile(r"\d{4}-\d{2}-\d{2}[_ T]\d{2}:\d{2}:\d{2}[.,]\d+")
 
 def _parse_dt_series(raw: pd.Series) -> pd.Series:
-    """Parse datetimes from strings that may use '_' between date and time or commas as decimal sep."""
+    #Parse date-times from strings that may use '_' between date and time or commas as decimal...
     s = raw.astype(str).str.strip()
-    # replace only the *first* '_' (between date and time) with a space
+    # replace only the first '_' (between date and time) with a space
     s = s.str.replace("_", " ", n=1, regex=False)
     s = s.str.replace(",", ".", regex=False)
     return pd.to_datetime(s, errors="coerce", utc=True)
@@ -117,6 +117,10 @@ def load_sensor_csv(path: Path) -> pd.DataFrame:
             "acoustic": acoustic,
             "accel": accel,
         })
+        df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce", utc=False)
+        # ensure naive
+        if getattr(df["timestamp"].dt, "tz", None) is not None:
+            df["timestamp"] = df["timestamp"].dt.tz_localize(None)
 
     # Ensure expected columns exist
     expected = ["timestamp","accel","acoustic","force_x","force_y","force_z"]
@@ -196,7 +200,7 @@ def extract_window(df_rs: pd.DataFrame,
 
     # If the actual overlap is tiny (e.g., <50% of desired window), reject
     overlap = (t1c - t0c).total_seconds()
-    if overlap < 0.5 * window_seconds:
+    if overlap < 0.3 * window_seconds:
         return None
 
     return out.reset_index(drop=True)

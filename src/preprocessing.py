@@ -13,7 +13,6 @@ SETS_CSV = BASE_DIR / "data" / "rawsets" / "sets.csv"
 
 #Loading the metadata from labels.csv and sets.csv. And Using only Set2 for processing...
 print("Loading metadata...") #For flow checking, can be removed.
-metadata = pd.read_csv(LABELS_CSV)
 labels_df = pd.read_csv(LABELS_CSV)
 sets_df = pd.read_csv(SETS_CSV)
 
