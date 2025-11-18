@@ -79,6 +79,7 @@ def process_image_file(
 
     return meta
 
+#Batch Processing the images...
 def batch_process_images(image_names: Iterable[str],
                          src_dir: Path,
                          dest_dir: Path,
@@ -86,7 +87,6 @@ def batch_process_images(image_names: Iterable[str],
                          keep_name: bool = False,
                          save_png: bool = True) -> pd.DataFrame:
 
-    #Process a list of image filenames from src_dir → dest_dir.
     rows: List[Dict] = []
     for name in image_names:
         meta = process_image_file(Path(src_dir) / name,
@@ -99,12 +99,13 @@ def batch_process_images(image_names: Iterable[str],
         rows.append(meta)
     return pd.DataFrame(rows)
 
+
 def load_resnet_encoder(device="cpu"):
     weights = ResNet50_Weights.DEFAULT
     model = resnet50(weights=weights)
 
     # Remove the final classification layer
-    encoder = nn.Sequential(*list(model.children())[:-1])
+    encoder = nn.Sequential(*list(model.children())[:-1])  
     # Now encoder outputs: [batch, 2048, 1, 1]
 
     encoder.to(device)
@@ -117,3 +118,32 @@ def encode_image(tensor, encoder, device="cpu"):
         features = encoder(tensor)      # shape [1, 2048, 1, 1]
         features = features.flatten(1)  # shape [1, 2048]
     return features.squeeze(0).cpu()    # shape [2048]
+
+# src_path = Path("raw/Set1/images/File_name_2022-09-12T10_22_29.720753.jpg")
+#
+# # Where to save optional PNG visualizations (optional)
+# dest_root = Path("processed/Set1/")
+#
+# meta = process_image_file(
+#     src_path=src_path,
+#     dest_root=dest_root,
+#     img_size=224,
+#     keep_name=False,
+#     save_png=True       # set to False if you don't want PNGs
+# )
+#
+# # Check if the image was loaded successfully
+# if meta["status"] != "ok":
+#     print("Image could not be processed:", meta["status"])
+# else:
+#     print("Image processed!")
+#
+#     # 2. Load the ResNet feature extractor
+#     device = "cpu"      # or "cuda" if you have a GPU
+#     encoder = load_resnet_encoder(device=device)
+#
+#     # 3. Get the embedding (2048-dimensional tensor)
+#     embedding = encode_image(meta["tensor"], encoder, device=device)
+#
+#     print("Embedding shape:", embedding.shape)
+#     print("First 10 embedding values:", embedding[:10])
