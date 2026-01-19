@@ -8,10 +8,6 @@
 #  Inputs expected per set:
 #    data/processed/set{sid}/merged.csv
 #    data/processed/set{sid}/image_embeddings.npz
-#
-#  image_embeddings.npz must contain:
-#    embeddings: (N, 2048) float
-#    image_id:   (N,)      stringable
 # ============================================================
 
 from __future__ import annotations
