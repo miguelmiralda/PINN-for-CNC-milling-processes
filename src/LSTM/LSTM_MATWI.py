@@ -11,8 +11,6 @@ This script:
       (accel, acoustic, force_x, force_y, force_z)
 - Trains one LSTM regression model
 - Reports MSE/RMSE/MAE, and test MAE separately for the two types
-
-You can paste this file directly into VS Code and run it.
 """
 
 import argparse
@@ -31,7 +29,7 @@ from torch.utils.data import Dataset, DataLoader
 from torch.nn.utils.rnn import pad_sequence, pack_padded_sequence
 
 
-# ---------- SETTINGS YOU REQUESTED ----------
+
 FEATURE_KEYS = ["accel", "acoustic", "force_x", "force_y", "force_z"]
 KEEP_TYPES = {"flank_wear", "flank_wear+adhesion"}
 

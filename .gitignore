@@ -1,6 +1,8 @@
 data/
 outputs/
 .idea/
+lstm_windowstats_runs/
+processed/
 old/toolmonitor.py
 old/sensor_processing.py
 old/image_processing.py
